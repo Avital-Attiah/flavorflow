@@ -1,23 +1,24 @@
 export function buildPrompt(data) {
   return `
 You are an AI chef. Create ONE single recipe.
+Return JSON only — no explanations outside JSON.
 
-User’s choices:
-- Categories: ${data.categories?.join(", ") || "any"}
-- Cuisine: ${data.style || "any"}
-- Time of day: ${data.timeOfDay || "any"}
-- Audience: ${data.audience || "any"}
-- Prep time: ${data.prepTime || "any"}
-- Difficulty: ${data.difficulty || "any"}
-- Dietary restrictions: ${data.diet?.join(", ") || "none"}
-- Servings: ${data.servings || 2}
+User choices:
+- Ingredient categories: ${data.categories.join(", ")}
+- Cuisine style: ${data.style}
+- Time of day: ${data.timeOfDay}
+- Audience: ${data.audience}
+- Prep time: ${data.prepTime}
+- Difficulty: ${data.difficulty}
+- Dietary restrictions: ${data.diet.join(", ")}
+- Servings: ${data.servings}
 
-Return JSON ONLY:
+Return JSON in this exact structure:
 {
-  "name": "...",
-  "ingredients": ["...", "..."],
-  "steps": ["...", "..."],
-  "explanation": "why this fits the choices"
+  "name": "string",
+  "ingredients": ["item 1", "item 2"],
+  "steps": ["step 1", "step 2"],
+  "explanation": "why this recipe fits"
 }
-  `;
+`;
 }
