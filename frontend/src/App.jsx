@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Wizard from "./Wizard";
-import RecipeView from "./RecipeView";
+import RecipeView from "./components/RecipeView";
 
 function App() {
   const [recipe, setRecipe] = useState(null);
