@@ -3,21 +3,27 @@ dotenv.config();
 
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-// ⚠ דוגמה לשימוש במודל חדש
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
+// חשוב: השתמשי באחד מהמודלים שכן מופיעים אצלך ברשימה:
 const model = genAI.getGenerativeModel({
-  model: "gemini-1.5-flash"  // או gemini-1.5-pro
+  model: "models/gemini-2.5-flash"
 });
 
 export async function askGemini(prompt) {
   try {
     const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text();
 
-    console.log("AI RAW RESPONSE:", text);
+    let text = result.response.text();
 
-    return JSON.parse(text);   // חשוב! לקבל JSON אמיתי
+// מסיר סימוני ``` אם קיימים
+text = text.replace(/```json/gi, "").replace(/```/g, "").trim();
+
+console.log("Cleaned AI text:", text);
+
+return JSON.parse(text);
+
+
   } catch (err) {
     console.error("Gemini Error:", err);
     throw err;
