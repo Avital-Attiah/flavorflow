@@ -1,14 +1,16 @@
 import { useState } from "react";
-import { generateRecipe } from "./api";
+import { generateRecipe } from "../api";
 
-import StepCategories from "./components/Steps/StepCategories";
-import StepStyle from "./components/Steps/StepStyle";
-import StepTimeOfDay from "./components/Steps/StepTimeOfDay";
-import StepAudience from "./components/Steps/StepAudience";
-import StepPrepTime from "./components/Steps/StepPrepTime";
-import StepDifficulty from "./components/Steps/StepDifficulty";
-import StepDiet from "./components/Steps/StepDiet";
-import StepServings from "./components/Steps/StepServings";
+import StepCategories from "./Steps/StepCategories";
+import StepStyle from "./Steps/StepStyle";
+import StepTimeOfDay from "./Steps/StepTimeOfDay";
+import StepAudience from "./Steps/StepAudience";
+import StepPrepTime from "./Steps/StepPrepTime";
+import StepDifficulty from "./Steps/StepDifficulty";
+import StepDiet from "./Steps/StepDiet";
+import StepServings from "./Steps/StepServings";
+import { saveRecipeToHistory } from "../history";
+
 
 const steps = [
   StepCategories,
@@ -39,8 +41,12 @@ export default function Wizard({ setRecipe }) {
   const next = () => setStepIndex(stepIndex + 1);
   const prev = () => setStepIndex(stepIndex - 1);
 
-  const submit = async () => {
+   const submit = async () => {
     const res = await generateRecipe(formData);
+
+    saveToHistory(res.data);
+    refreshHistory();   // ←←← מעדכן את הסיידבר בזמן אמת!
+
     setRecipe(res.data);
   };
 
