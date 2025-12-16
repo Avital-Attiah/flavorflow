@@ -13,13 +13,18 @@ function App() {
       <HistorySidebar key={historyKey} onSelect={setRecipe} />
 
       <main style={{ flex: 1, padding: 24, marginLeft: "260px" }}>
-        <Wizard
-          setRecipe={(r) => {
-            setRecipe(r);
-            setHistoryKey((k) => k + 1); // רענון סיידבר
-          }}
-        />
+        
+        {/* Show Wizard ONLY when no recipe is selected */}
+        {!recipe && (
+          <Wizard
+            setRecipe={(r) => {
+              setRecipe(r);
+              setHistoryKey((k) => k + 1);
+            }}
+          />
+        )}
 
+        {/* Show Recipe View ONLY when recipe exists */}
         {recipe && (
           <RecipeView
             recipe={recipe}
