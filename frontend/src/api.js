@@ -6,3 +6,6 @@ const API = axios.create({
 
 export const generateRecipe = (data) =>
   API.post("/recipe/generate", data);
+
+export const getSubstitutes = (payload) =>
+  API.post("/recipe/substitutes", payload);

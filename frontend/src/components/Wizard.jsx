@@ -1,3 +1,4 @@
+// frontend/src/components/Wizard.jsx
 import { useState } from "react";
 import { generateRecipe } from "../api";
 
@@ -9,8 +10,7 @@ import StepPrepTime from "./Steps/StepPrepTime";
 import StepDifficulty from "./Steps/StepDifficulty";
 import StepDiet from "./Steps/StepDiet";
 import StepServings from "./Steps/StepServings";
-import { saveRecipeToHistory } from "../history";
-
+import { saveRecipeToHistory } from "../history"; // שימי לב לשם!
 
 const steps = [
   StepCategories,
@@ -38,16 +38,22 @@ export default function Wizard({ setRecipe }) {
 
   const CurrentStep = steps[stepIndex];
 
-  const next = () => setStepIndex(stepIndex + 1);
-  const prev = () => setStepIndex(stepIndex - 1);
+  const next = () => setStepIndex((i) => i + 1);
+  const prev = () => setStepIndex((i) => i - 1);
 
-   const submit = async () => {
-    const res = await generateRecipe(formData);
+  const submit = async () => {
+    try {
+      const res = await generateRecipe(formData);
 
-    saveToHistory(res.data);
-    refreshHistory();   // ←←← מעדכן את הסיידבר בזמן אמת!
+      // שמירה בהיסטוריה
+      saveRecipeToHistory(res.data);
 
-    setRecipe(res.data);
+      // הצגת המתכון על המסך + טריגר לריענון הסיידבר (בא App.jsx)
+      setRecipe(res.data);
+    } catch (err) {
+      console.error("Error generating recipe:", err);
+      alert("משהו השתבש ביצירת המתכון 😕 נסי שוב עוד מעט.");
+    }
   };
 
   return (
@@ -59,11 +65,13 @@ export default function Wizard({ setRecipe }) {
 
       <div style={{ marginTop: 20 }}>
         {stepIndex > 0 && <button onClick={prev}>Back</button>}
+
         {stepIndex < steps.length - 1 && (
           <button onClick={next} style={{ marginLeft: 8 }}>
             Next
           </button>
         )}
+
         {stepIndex === steps.length - 1 && (
           <button onClick={submit} style={{ marginLeft: 8 }}>
             Generate Recipe
