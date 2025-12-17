@@ -13,7 +13,11 @@ app.use(express.json());
 
 app.use("/api/recipe", recipeRoutes);
 app.post("/api/recipe/substitutes", suggestSubstitutes);
+export default app;
 
-app.listen(PORT, () => {
-  console.log(`FlavorFlow backend running on port ${PORT}`);
-});
+if (process.env.NODE_ENV !== "test") {
+  app.listen(PORT, () => {
+    console.log(`FlavorFlow backend running on port ${PORT}`);
+  });
+}
+
