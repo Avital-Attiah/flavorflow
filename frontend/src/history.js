@@ -1,17 +1,32 @@
-// שמירת מתכון אחד בהיסטוריה
+const KEY = "recipeHistory";
+
+export function getRecipeHistory() {
+  return JSON.parse(localStorage.getItem(KEY)) || [];
+}
+
 export function saveRecipeToHistory(recipe) {
-  let history = JSON.parse(localStorage.getItem("recipeHistory")) || [];
+  const history = getRecipeHistory();
 
   history.unshift({
     id: Date.now(),
     name: recipe.name,
     fullRecipe: recipe,
+    favorite: false,
   });
 
-  localStorage.setItem("recipeHistory", JSON.stringify(history));
+  localStorage.setItem(KEY, JSON.stringify(history));
 }
 
-// קבלת כל ההיסטוריה
-export function getRecipeHistory() {
-  return JSON.parse(localStorage.getItem("recipeHistory")) || [];
+export function deleteFromHistory(id) {
+  const updated = getRecipeHistory().filter((r) => r.id !== id);
+  localStorage.setItem(KEY, JSON.stringify(updated));
+  return updated;
+}
+
+export function toggleFavorite(id) {
+  const updated = getRecipeHistory().map((r) =>
+    r.id === id ? { ...r, favorite: !r.favorite } : r
+  );
+  localStorage.setItem(KEY, JSON.stringify(updated));
+  return updated;
 }

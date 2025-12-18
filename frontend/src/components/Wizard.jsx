@@ -10,7 +10,13 @@ import StepPrepTime from "./Steps/StepPrepTime";
 import StepDifficulty from "./Steps/StepDifficulty";
 import StepDiet from "./Steps/StepDiet";
 import StepServings from "./Steps/StepServings";
-import { saveRecipeToHistory } from "../history"; // שימי לב לשם!
+import { saveRecipeToHistory } from "../history";
+import "../styles/theme.css";
+import "../styles/wizard.css";
+import "../styles/Buttons.css";
+import "../styles/GenerateButton.css";
+import "../styles/progress.css";
+
 
 const steps = [
   StepCategories,
@@ -57,26 +63,46 @@ export default function Wizard({ setRecipe }) {
   };
 
   return (
-    <div>
-      <h1>FlavorFlow</h1>
-      <p>Step {stepIndex + 1} of {steps.length}</p>
+    <div className="wizard-container">
+      <div className="wizard-card">
 
-      <CurrentStep data={formData} setData={setFormData} />
+        {/* כותרת */}
+        <h1 style={{ marginBottom: 8 }}>🍽️ FlavorFlow</h1>
+        <p style={{ color: "var(--muted)", marginBottom: 24 }}>
+          שלב {stepIndex + 1} מתוך {steps.length}
+        </p>
+        <div className="progress-wrapper">
+          <div
+            className="progress-bar"
+            style={{
+              width: `${((stepIndex + 1) / steps.length) * 100}%`,
+            }}
+          />
+        </div>
 
-      <div style={{ marginTop: 20 }}>
-        {stepIndex > 0 && <button onClick={prev}>Back</button>}
+        {/* תוכן השלב */}
+        <CurrentStep data={formData} setData={setFormData} />
 
-        {stepIndex < steps.length - 1 && (
-          <button onClick={next} style={{ marginLeft: 8 }}>
-            Next
-          </button>
-        )}
+        {/* כפתורי ניווט */}
+        <div style={{ marginTop: 32, display: "flex", justifyContent: "space-between" }}>
+          {stepIndex > 0 ? (
+            <button className="option-button" onClick={prev}>
+              ← חזרה
+            </button>
+          ) : <div />}
 
-        {stepIndex === steps.length - 1 && (
-          <button onClick={submit} style={{ marginLeft: 8 }}>
-            Generate Recipe
-          </button>
-        )}
+          {stepIndex < steps.length - 1 && (
+            <button className="generate-btn" onClick={next}>
+              המשך →
+            </button>
+          )}
+
+          {stepIndex === steps.length - 1 && (
+            <button className="generate-btn" onClick={submit}>
+              ✨ צור מתכון
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

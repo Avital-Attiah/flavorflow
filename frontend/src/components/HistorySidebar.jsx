@@ -1,5 +1,7 @@
-import React, { useEffect, useState } from "react";
+// frontend/src/components/HistorySidebar.jsx
+import { useEffect, useState } from "react";
 import { getRecipeHistory } from "../history";
+import "../styles/history.css";
 
 export default function HistorySidebar({ onSelect }) {
   const [history, setHistory] = useState([]);
@@ -9,45 +11,30 @@ export default function HistorySidebar({ onSelect }) {
   }, []);
 
   return (
-    <div style={styles.sidebar}>
-      <h3 style={styles.title}>היסטוריית מתכונים</h3>
+    <aside className="history-sidebar">
+      <div className="history-title">📜 היסטוריית מתכונים</div>
 
-      {history.length === 0 && <p>אין היסטוריה עדיין...</p>}
+      {history.length === 0 && (
+        <p className="history-empty">אין היסטוריה עדיין…</p>
+      )}
 
-      {history.map((item) => (
-        <div
-          key={item.id}
-          style={styles.item}
-          onClick={() => onSelect(item.fullRecipe)}
-        >
-          {item.name}
-        </div>
-      ))}
-    </div>
+      <ul className="history-list">
+        {history.map((item) => (
+          <li
+            key={item.id}
+            className="history-item"
+            onClick={() => onSelect(item.fullRecipe)}
+          >
+            <div className="history-recipe-name">
+              {item.name}
+            </div>
+
+            <div className="history-date">
+              {new Date(item.id).toLocaleDateString("he-IL")}
+            </div>
+          </li>
+        ))}
+      </ul>
+    </aside>
   );
 }
-
-const styles = {
-  sidebar: {
-    width: "250px",
-    background: "#f3f3f3",
-    padding: "15px",
-    borderRight: "1px solid #ccc",
-    height: "100vh",
-    overflowY: "auto",
-    position: "fixed",
-    left: 0,
-    top: 0,
-  },
-  title: {
-    marginBottom: "10px",
-  },
-  item: {
-    padding: "10px",
-    background: "white",
-    marginBottom: "8px",
-    borderRadius: "5px",
-    cursor: "pointer",
-    border: "1px solid #ddd",
-  },
-};

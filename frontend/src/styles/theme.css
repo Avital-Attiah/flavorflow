@@ -1,0 +1,16 @@
+:root {
+  --primary: #5fb3a2;      /* ירוק מרווה */
+  --primary-dark: #4aa091;
+  --accent: #ff8c42;       /* כתום אוכל */
+  --bg: #fafaf8;           /* לבן חמים */
+  --card: #ffffff;
+  --text: #2e2e2e;
+  --muted: #8a8a8a;
+  --border: #e6e6e6;
+
+  --radius: 16px;
+  --radius-sm: 10px;
+
+  --shadow: 0 10px 30px rgba(0,0,0,0.08);
+  --shadow-soft: 0 4px 12px rgba(0,0,0,0.06);
+}

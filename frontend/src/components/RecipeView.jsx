@@ -2,16 +2,21 @@
 import { useState } from "react";
 import { getSubstitutes } from "../api";
 
+import "../styles/theme.css";
+import "../styles/wizard.css";
+import "../styles/Buttons.css";
+import "../styles/GenerateButton.css";
+import "../styles/recipe.css";
+
 export default function RecipeView({ recipe, onChooseAgain }) {
-  const [missing, setMissing] = useState([]);   // indices of missing ingredients
-  const [subs, setSubs] = useState(null);       // substitutions from Gemini
+  const [missing, setMissing] = useState([]);
+  const [subs, setSubs] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   if (!recipe) return null;
 
   const toggleMissing = (index) => {
-    // whenever user changes selection, clear old substitutes
     setSubs(null);
     setError("");
     setMissing((prev) =>
@@ -39,7 +44,6 @@ export default function RecipeView({ recipe, onChooseAgain }) {
         missingIngredients,
       });
 
-      // backend now returns: { substitutions: [ { original, substitute, isCritical } ] }
       setSubs(res.data.substitutions || []);
     } catch (err) {
       console.error("Failed to get substitutes:", err);
@@ -57,28 +61,29 @@ export default function RecipeView({ recipe, onChooseAgain }) {
   };
 
   return (
-    <div style={{ marginTop: 20, maxWidth: "700px" }}>
-      <h2>{recipe.name}</h2>
+    <div className="recipe-container">
+      <h2 className="recipe-title">🍽️ {recipe.name}</h2>
 
-      <h3>Ingredients:</h3>
-      <ul>
-        {recipe.ingredients?.map((ingredient, index) => (
-          <li key={index} style={{ marginBottom: 4 }}>
-            <label style={{ cursor: "pointer" }}>
-              <input
-                type="checkbox"
-                checked={missing.includes(index)}
-                onChange={() => toggleMissing(index)}
-                style={{ marginRight: 8 }}
-              />
-              {ingredient}
-            </label>
-          </li>
-        ))}
-      </ul>
+      {/* Ingredients */}
+      <div className="recipe-section">
+        <h3>🧂 Ingredients</h3>
+        <ul className="recipe-ingredients">
+          {recipe.ingredients?.map((ingredient, index) => (
+            <li key={index}>
+              <label style={{ cursor: "pointer" }}>
+                <input
+                  type="checkbox"
+                  checked={missing.includes(index)}
+                  onChange={() => toggleMissing(index)}
+                  style={{ marginRight: 8 }}
+                />
+                {ingredient}
+              </label>
+            </li>
+          ))}
+        </ul>
 
-      {recipe.ingredients?.length > 0 && (
-        <div style={{ marginTop: 10, marginBottom: 10 }}>
+        <div style={{ marginTop: 12 }}>
           <button
             onClick={handleFindSubstitutes}
             disabled={missing.length === 0 || loading}
@@ -87,44 +92,48 @@ export default function RecipeView({ recipe, onChooseAgain }) {
               ? "Finding substitutes..."
               : missing.length === 0
               ? "Select missing ingredients"
-              : "Find substitutes for missing ingredients"}
+              : "Find substitutes"}
           </button>
 
           {error && (
-            <p style={{ color: "red", marginTop: 8 }}>
-              {error}
-            </p>
+            <p style={{ color: "red", marginTop: 8 }}>{error}</p>
           )}
         </div>
-      )}
+      </div>
 
-      {/* ⬇️ This part is adapted to the NEW backend response */}
+      {/* Substitutes */}
       {subs && subs.length > 0 && (
-        <div style={{ marginTop: 16 }}>
-          <h4>Suggested substitutes:</h4>
+        <div className="substitutes-box">
+          <h4>🔁 Suggested substitutes</h4>
           <ul>
             {subs.map((s, idx) => (
-              <li key={idx} style={{ marginBottom: 6 }}>
+              <li key={idx}>
                 <strong>{s.original}:</strong>{" "}
                 {s.substitute && !s.isCritical
-                  ? `You can replace it with: ${s.substitute}`
-                  : "This ingredient is critical. Please use another recipe or adjust the dish."}
+                  ? s.substitute
+                  : "This ingredient is critical. Consider another recipe."}
               </li>
             ))}
           </ul>
         </div>
       )}
 
-      <h3>Steps:</h3>
-      <ol>
-        {recipe.steps?.map((s, index) => (
-          <li key={index}>{s}</li>
-        ))}
-      </ol>
+      {/* Steps */}
+      <div className="recipe-section">
+        <h3>👩‍🍳 Steps</h3>
+        <ol className="recipe-steps">
+          {recipe.steps?.map((step, index) => (
+            <li key={index}>{step}</li>
+          ))}
+        </ol>
+      </div>
 
-      <button onClick={handleChooseAgain} style={{ marginTop: 20 }}>
-        Choose again
-      </button>
+      {/* Actions */}
+      <div className="recipe-actions">
+        <button onClick={handleChooseAgain}>
+          🔄 Choose another recipe
+        </button>
+      </div>
     </div>
   );
 }

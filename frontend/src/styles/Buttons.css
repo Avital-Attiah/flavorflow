@@ -1,0 +1,18 @@
+.option-button {
+  padding: 12px 18px;
+  margin: 6px;
+  border-radius: 999px;
+  background: #f0f0f0;
+  color: var(--text);
+  transition: all 0.2s ease;
+}
+
+.option-button:hover {
+  background: var(--primary);
+  color: white;
+}
+
+.option-button.selected {
+  background: var(--primary);
+  color: white;
+}

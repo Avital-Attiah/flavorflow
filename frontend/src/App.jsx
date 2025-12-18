@@ -3,6 +3,8 @@ import { useState } from "react";
 import Wizard from "./components/Wizard";
 import HistorySidebar from "./components/HistorySidebar";
 import RecipeView from "./components/RecipeView";
+import "./styles/theme.css";
+
 
 function App() {
   const [recipe, setRecipe] = useState(null);
