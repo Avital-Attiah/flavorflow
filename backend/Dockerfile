@@ -2,10 +2,13 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-COPY package*.json ./
+# מעתיקים package.json מה-backend
+COPY backend/package*.json ./
+
 RUN npm install
 
-COPY . .
+# מעתיקים את כל קוד ה-backend
+COPY backend/. .
 
 EXPOSE 3000
 
