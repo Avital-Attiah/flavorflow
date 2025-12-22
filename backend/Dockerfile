@@ -1,3 +1,5 @@
+# force rebuild
+
 FROM node:20-alpine
 
 WORKDIR /app
@@ -7,6 +9,6 @@ RUN npm install
 
 COPY . .
 
-EXPOSE 3001
+EXPOSE 3000
 
 CMD ["npm", "start"]
