@@ -1,9 +1,6 @@
 import request from "supertest";
 import { jest } from "@jest/globals";
 
-
-
-// mock ל־Gemini text
 jest.unstable_mockModule("../services/gemini.service.js", () => ({
   askGemini: async () => ({
     name: "Test Recipe",
@@ -13,17 +10,13 @@ jest.unstable_mockModule("../services/gemini.service.js", () => ({
   }),
 }));
 
-// ⭐ mock ל־Image AI (החלק שחסר לך!)
+// ⭐ mock ל־Image AI 
 jest.unstable_mockModule("../services/image.service.js", () => ({
   generateDishImage: async () =>
     "data:image/png;base64,FAKE_IMAGE_FOR_TESTS",
 }));
 
 
-
-
-
-// ⬇️ ייבוא AFTER המוק
 const { default: app } = await import("../server.js");
 
 describe("POST /api/recipe/generate", () => {

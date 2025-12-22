@@ -27,9 +27,10 @@ jobs:
         working-directory: backend
         run: npm install
 
-      - name: Run backend tests
+      - name: Run backend tests with coverage
         working-directory: backend
-        run: npm test
+        run: npm run test:coverage
+
 
   docker-build:
     runs-on: ubuntu-latest
