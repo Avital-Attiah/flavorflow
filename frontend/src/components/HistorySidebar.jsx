@@ -12,10 +12,10 @@ export default function HistorySidebar({ onSelect }) {
 
   return (
     <aside className="history-sidebar">
-      <div className="history-title">📜 היסטוריית מתכונים</div>
+      <div className="history-title">📜Recipe history</div>
 
       {history.length === 0 && (
-        <p className="history-empty">אין היסטוריה עדיין…</p>
+        <p className="history-empty">No history yet…</p>
       )}
 
       <ul className="history-list">

@@ -77,7 +77,7 @@ export default function Wizard({ setRecipe }) {
         <div className="wizard-card">
         <h1 style={{ marginBottom: 4 }}>🍽️ FlavorFlow</h1>
 <p style={{ color: "var(--muted)", marginBottom: 8 }}>
-  שלב {stepIndex + 1} מתוך {steps.length}
+ Step {stepIndex + 1} of {steps.length}
 </p>
 
 
@@ -104,7 +104,7 @@ export default function Wizard({ setRecipe }) {
           <div className="wizard-actions">
             {stepIndex > 0 ? (
               <button className="option-button" onClick={prev} disabled={isGenerating}>
-                ← חזרה
+                ← Back
               </button>
             ) : (
               <div />
@@ -112,13 +112,13 @@ export default function Wizard({ setRecipe }) {
 
             {stepIndex < steps.length - 1 && (
               <button className="generate-btn" onClick={next} disabled={isGenerating}>
-                המשך →
+               Next →
               </button>
             )}
 
             {stepIndex === steps.length - 1 && (
               <button className="generate-btn" onClick={submit} disabled={isGenerating}>
-                {isGenerating ? "מכין מתכון..." : "✨ צור מתכון"}
+                {isGenerating ? "Preparing a recipe..." : "✨ Create a recipe"}
               </button>
             )}
           </div>
