@@ -91,8 +91,8 @@ export default function RecipeView({ recipe, onChooseAgain }) {
             {loading
               ? "Finding substitutes..."
               : missing.length === 0
-              ? "Select missing ingredients"
-              : "Find substitutes"}
+                ? "Select missing ingredients"
+                : "Find substitutes"}
           </button>
 
           {error && (
@@ -127,6 +127,14 @@ export default function RecipeView({ recipe, onChooseAgain }) {
           ))}
         </ol>
       </div>
+      {recipe.image && (
+        <img
+          src={recipe.image}
+          alt={recipe.name}
+          className="recipe-image"
+        />
+      )}
+
 
       {/* Actions */}
       <div className="recipe-actions">
