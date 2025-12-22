@@ -2,6 +2,7 @@ import request from "supertest";
 import { jest } from "@jest/globals";
 
 
+
 // mock ל־Gemini text
 jest.unstable_mockModule("../services/gemini.service.js", () => ({
   askGemini: async () => ({
