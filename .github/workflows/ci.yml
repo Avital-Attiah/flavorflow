@@ -5,10 +5,10 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+
 permissions:
   contents: read
   packages: write
-
 
 jobs:
   backend-tests:
@@ -32,19 +32,21 @@ jobs:
         run: npm test
 
   docker-build:
-  runs-on: ubuntu-latest
-  needs: backend-tests
-  steps:
-    - uses: actions/checkout@v4
+    runs-on: ubuntu-latest
+    needs: backend-tests
 
-    - name: Login to GitHub Container Registry
-      uses: docker/login-action@v3
-      with:
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Build and push Docker image
-      run: |
-        docker build -t ghcr.io/${{ github.repository }}/backend:latest ./backend
-        docker push ghcr.io/${{ github.repository }}/backend:latest
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        run: |
+          docker build -t ghcr.io/${{ github.repository }}/backend:latest ./backend
+          docker push ghcr.io/${{ github.repository }}/backend:latest
