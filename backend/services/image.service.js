@@ -1,8 +1,16 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+let genAI = null;
+
+if (process.env.GEMINI_API_KEY) {
+  genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+}
 
 export async function generateDishImage(prompt) {
+  if (!genAI) {
+    throw new Error("Image generation disabled (no API key)");
+  }
+
   const model = genAI.getGenerativeModel({
     model: "models/gemini-2.0-flash-exp-image-generation",
   });

@@ -21,15 +21,7 @@ jest.unstable_mockModule("../services/image.service.js", () => ({
 
 
 
-// 👇 Mock ל-Gemini (ב-ES Modules)
-jest.unstable_mockModule("../services/gemini.service.js", () => ({
-  askGemini: async () => ({
-    name: "Test Recipe",
-    ingredients: ["Ingredient 1", "Ingredient 2"],
-    steps: ["Step 1", "Step 2"],
-    explanation: "Test explanation",
-  }),
-}));
+
 
 // ⬇️ ייבוא AFTER המוק
 const { default: app } = await import("../server.js");
