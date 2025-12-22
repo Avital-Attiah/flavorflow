@@ -1,29 +1,23 @@
 import request from "supertest";
 import { jest } from "@jest/globals";
 
+/* 🔒 1. כל ה-mocks קודם */
 
-
-// mock ל־Gemini text
 jest.unstable_mockModule("../services/gemini.service.js", () => ({
   askGemini: async () => ({
     name: "Test Recipe",
-    ingredients: ["Ingredient 1"],
-    steps: ["Step 1"],
+    ingredients: ["Ingredient 1", "Ingredient 2"],
+    steps: ["Step 1", "Step 2"],
     explanation: "Test explanation",
   }),
 }));
 
-// ⭐ mock ל־Image AI (החלק שחסר לך!)
 jest.unstable_mockModule("../services/image.service.js", () => ({
   generateDishImage: async () =>
     "data:image/png;base64,FAKE_IMAGE_FOR_TESTS",
 }));
 
-
-
-
-
-// ⬇️ ייבוא AFTER המוק
+/* 🚀 2. רק עכשיו מייבאים את השרת */
 const { default: app } = await import("../server.js");
 
 describe("POST /api/recipe/generate", () => {
