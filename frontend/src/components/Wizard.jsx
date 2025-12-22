@@ -10,6 +10,8 @@ import StepPrepTime from "./Steps/StepPrepTime";
 import StepDifficulty from "./Steps/StepDifficulty";
 import StepDiet from "./Steps/StepDiet";
 import StepServings from "./Steps/StepServings";
+import RecipeLoader from "./RecipeLoader";
+
 
 import { saveRecipeToHistory } from "../history";
 
@@ -68,15 +70,8 @@ export default function Wizard({ setRecipe }) {
 
   return (
     <>
-      {isGenerating && (
-        <div className="loading-overlay">
-          <div className="loading-box">
-            <div className="spinner" />
-            <div className="loading-text">יוצר מתכון…</div>
-            <div className="loading-subtext">זה יכול לקחת עד דקה</div>
-          </div>
-        </div>
-      )}
+      {isGenerating && <RecipeLoader />}
+
 
       <div className="wizard-container">
         <div className="wizard-card">
