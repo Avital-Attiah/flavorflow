@@ -1,6 +1,11 @@
 import request from "supertest";
 import { jest } from "@jest/globals";
 
+jest.unstable_mockModule("../services/image.service.js", () => ({
+  generateDishImage: async () =>
+    "data:image/png;base64,FAKE_IMAGE_FOR_TESTS",
+}));
+
 // 👇 Mock ל-Gemini (ב-ES Modules)
 jest.unstable_mockModule("../services/gemini.service.js", () => ({
   askGemini: async () => ({

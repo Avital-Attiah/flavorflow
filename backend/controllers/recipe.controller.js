@@ -2,65 +2,35 @@
 import { buildPrompt } from "../utils/promptBuilder.js";
 import { askGemini } from "../services/gemini.service.js";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { generateDishImage } from "../services/image.service.js";
+
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-export async function generateRecipeImage(recipeName, ingredients) {
-  const model = genAI.getGenerativeModel({
-    model: "gemini-1.5-flash",
-  });
 
-  const prompt = `
-Create a realistic food image.
-Dish name: ${recipeName}
-Main ingredients: ${ingredients.slice(0, 6).join(", ")}
-
-Style:
-- Professional food photography
-- Clean white plate
-- Natural lighting
-- High quality, appetizing
-`;
-
-  const result = await model.generateContent([
-    {
-      role: "user",
-      parts: [{ text: prompt }],
-    },
-  ]);
-
-  const imagePart = result.response.candidates[0].content.parts.find(
-    (p) => p.inlineData
-  );
-
-  if (!imagePart) return null;
-
-  return `data:image/png;base64,${imagePart.inlineData.data}`;
-}
 
 export async function generateRecipe(req, res) {
   try {
     const prompt = buildPrompt(req.body);
 
-    // 1️⃣ יצירת המתכון (טקסט)
     const recipe = await askGemini(prompt);
 
-    // 2️⃣ יצירת תמונה למתכון (חדש!)
-    const image = await generateRecipeImage(
-      recipe.name,
-      recipe.ingredients
-    );
+    // ✨ יצירת תמונה אמיתית
+    const imagePrompt = `
+A professional food photograph of:
+${recipe.name}
+Clean white plate, natural light, high quality, realistic.
+`;
 
-    // 3️⃣ הוספת התמונה ל־JSON
-    recipe.image = image;
+    recipe.image = await generateDishImage(imagePrompt);
 
-    // 4️⃣ החזרה לפרונט
     res.json(recipe);
   } catch (err) {
     console.error("AI ERROR:", err);
     res.status(500).json({ error: "AI failed" });
   }
 }
+
 
 
 // פונקציה חדשה – הצעת תחליפים למרכיבים חסרים
