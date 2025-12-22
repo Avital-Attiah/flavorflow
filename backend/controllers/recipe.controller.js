@@ -1,28 +1,33 @@
 // backend/controllers/recipe.controller.js
 import { buildPrompt } from "../utils/promptBuilder.js";
 import { askGemini } from "../services/gemini.service.js";
-import { GoogleGenerativeAI } from "@google/generative-ai";
 import { generateDishImage } from "../services/image.service.js";
 
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
 
 
 
 export async function generateRecipe(req, res) {
   try {
     const prompt = buildPrompt(req.body);
-
     const recipe = await askGemini(prompt);
 
-    // ✨ יצירת תמונה אמיתית
-    const imagePrompt = `
+    // ✨ תמונה – אופציונלי
+    if (process.env.GEMINI_API_KEY) {
+      try {
+        const imagePrompt = `
 A professional food photograph of:
 ${recipe.name}
 Clean white plate, natural light, high quality, realistic.
 `;
-
-    recipe.image = await generateDishImage(imagePrompt);
+        recipe.image = await generateDishImage(imagePrompt);
+      } catch {
+        recipe.image = null;
+      }
+    } else {
+      recipe.image = null;
+    }
 
     res.json(recipe);
   } catch (err) {
@@ -30,6 +35,7 @@ Clean white plate, natural light, high quality, realistic.
     res.status(500).json({ error: "AI failed" });
   }
 }
+
 
 
 
