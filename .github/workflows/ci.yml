@@ -26,3 +26,13 @@ jobs:
       - name: Run backend tests
         working-directory: backend
         run: npm test
+
+  docker-build:
+    runs-on: ubuntu-latest
+    needs: backend-tests   # 👈 רק אם הטסטים עברו
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build backend Docker image
+        run: docker build -t flavorflow-backend ./backend
