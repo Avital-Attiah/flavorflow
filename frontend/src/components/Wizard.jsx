@@ -10,13 +10,14 @@ import StepPrepTime from "./Steps/StepPrepTime";
 import StepDifficulty from "./Steps/StepDifficulty";
 import StepDiet from "./Steps/StepDiet";
 import StepServings from "./Steps/StepServings";
+
 import { saveRecipeToHistory } from "../history";
+
 import "../styles/theme.css";
 import "../styles/wizard.css";
 import "../styles/Buttons.css";
 import "../styles/GenerateButton.css";
 import "../styles/progress.css";
-
 
 const steps = [
   StepCategories,
@@ -31,6 +32,8 @@ const steps = [
 
 export default function Wizard({ setRecipe }) {
   const [stepIndex, setStepIndex] = useState(0);
+  const [isGenerating, setIsGenerating] = useState(false);
+
   const [formData, setFormData] = useState({
     categories: [],
     style: null,
@@ -44,66 +47,88 @@ export default function Wizard({ setRecipe }) {
 
   const CurrentStep = steps[stepIndex];
 
-  const next = () => setStepIndex((i) => i + 1);
-  const prev = () => setStepIndex((i) => i - 1);
+  const next = () => setStepIndex((i) => Math.min(i + 1, steps.length - 1));
+  const prev = () => setStepIndex((i) => Math.max(i - 1, 0));
 
   const submit = async () => {
     try {
+      setIsGenerating(true);
+
       const res = await generateRecipe(formData);
 
-      // שמירה בהיסטוריה
       saveRecipeToHistory(res.data);
-
-      // הצגת המתכון על המסך + טריגר לריענון הסיידבר (בא App.jsx)
       setRecipe(res.data);
     } catch (err) {
       console.error("Error generating recipe:", err);
       alert("משהו השתבש ביצירת המתכון 😕 נסי שוב עוד מעט.");
+    } finally {
+      setIsGenerating(false);
     }
   };
 
   return (
-    <div className="wizard-container">
-      <div className="wizard-card">
-
-        {/* כותרת */}
-        <h1 style={{ marginBottom: 8 }}>🍽️ FlavorFlow</h1>
-        <p style={{ color: "var(--muted)", marginBottom: 24 }}>
-          שלב {stepIndex + 1} מתוך {steps.length}
-        </p>
-        <div className="progress-wrapper">
-          <div
-            className="progress-bar"
-            style={{
-              width: `${((stepIndex + 1) / steps.length) * 100}%`,
-            }}
-          />
+    <>
+      {isGenerating && (
+        <div className="loading-overlay">
+          <div className="loading-box">
+            <div className="spinner" />
+            <div className="loading-text">יוצר מתכון…</div>
+            <div className="loading-subtext">זה יכול לקחת עד דקה</div>
+          </div>
         </div>
+      )}
 
-        {/* תוכן השלב */}
-        <CurrentStep data={formData} setData={setFormData} />
+      <div className="wizard-container">
+        <div className="wizard-card">
+        <h1 style={{ marginBottom: 4 }}>🍽️ FlavorFlow</h1>
+<p style={{ color: "var(--muted)", marginBottom: 8 }}>
+  שלב {stepIndex + 1} מתוך {steps.length}
+</p>
 
-        {/* כפתורי ניווט */}
-        <div style={{ marginTop: 32, display: "flex", justifyContent: "space-between" }}>
-          {stepIndex > 0 ? (
-            <button className="option-button" onClick={prev}>
-              ← חזרה
-            </button>
-          ) : <div />}
 
-          {stepIndex < steps.length - 1 && (
-            <button className="generate-btn" onClick={next}>
-              המשך →
-            </button>
-          )}
+          {/* 8 עיגולים במקום פס */}
+          <div className="step-dots" aria-label="progress">
+            {steps.map((_, idx) => {
+              const cls =
+                idx < stepIndex
+                  ? "step-dot done"
+                  : idx === stepIndex
+                  ? "step-dot active"
+                  : "step-dot";
+              return <span key={idx} className={cls} />;
+            })}
+          </div>
 
-          {stepIndex === steps.length - 1 && (
-            <button className="generate-btn" onClick={submit}>
-              ✨ צור מתכון
-            </button>
-          )}
+          {/* תוכן השלב */}
+         <div className="wizard-step-content">
+  <CurrentStep data={formData} setData={setFormData} />
+</div>
+
+
+          {/* כפתורי ניווט */}
+          <div className="wizard-actions">
+            {stepIndex > 0 ? (
+              <button className="option-button" onClick={prev} disabled={isGenerating}>
+                ← חזרה
+              </button>
+            ) : (
+              <div />
+            )}
+
+            {stepIndex < steps.length - 1 && (
+              <button className="generate-btn" onClick={next} disabled={isGenerating}>
+                המשך →
+              </button>
+            )}
+
+            {stepIndex === steps.length - 1 && (
+              <button className="generate-btn" onClick={submit} disabled={isGenerating}>
+                {isGenerating ? "מכין מתכון..." : "✨ צור מתכון"}
+              </button>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

@@ -14,3 +14,18 @@
   --shadow: 0 10px 30px rgba(0,0,0,0.08);
   --shadow-soft: 0 4px 12px rgba(0,0,0,0.06);
 }
+/* App.css */
+
+.app-layout{
+  display: grid;
+  grid-template-columns: 320px 1fr; /* sidebar קבוע, מרכז תופס הכל */
+  gap: 18px;
+  height: 100vh;
+  overflow: hidden; /* שלא יהיה גלילה כללית של כל הדף */
+}
+
+.main-content{
+  height: 100vh;
+  overflow: hidden; /* הגלילה (אם יש) תהיה רק בתוך ה-wizard */
+  padding: 18px 18px 18px 0;
+}

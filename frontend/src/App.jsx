@@ -5,18 +5,15 @@ import HistorySidebar from "./components/HistorySidebar";
 import RecipeView from "./components/RecipeView";
 import "./styles/theme.css";
 
-
 function App() {
   const [recipe, setRecipe] = useState(null);
   const [historyKey, setHistoryKey] = useState(0);
 
   return (
-    <div style={{ display: "flex", minHeight: "100vh" }}>
+    <div className="app-layout">
       <HistorySidebar key={historyKey} onSelect={setRecipe} />
 
-      <main style={{ flex: 1, padding: 24, marginLeft: "260px" }}>
-        
-        {/* Show Wizard ONLY when no recipe is selected */}
+      <div className="main-content">
         {!recipe && (
           <Wizard
             setRecipe={(r) => {
@@ -26,14 +23,13 @@ function App() {
           />
         )}
 
-        {/* Show Recipe View ONLY when recipe exists */}
         {recipe && (
           <RecipeView
             recipe={recipe}
             onChooseAgain={() => setRecipe(null)}
           />
         )}
-      </main>
+      </div>
     </div>
   );
 }

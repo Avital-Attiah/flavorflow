@@ -1,11 +1,14 @@
 .recipe-container {
   background: white;
   border-radius: 20px;
-  padding: 32px;
+  padding: 28px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
-  max-width: 720px;
-  margin: 40px auto;
-  animation: fadeIn 0.6s ease;
+
+  width: min(900px, 100%);
+  margin: 0 auto;
+
+  max-height: calc(100vh - 32px); /* גובה לפי מסך */
+  overflow: auto;                 /* הגלילה כאן */
 }
 
 .recipe-title {
